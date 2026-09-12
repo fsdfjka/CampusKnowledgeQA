@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Config ###
+*.yml
+*.yaml
+!application.example.yml
+
+### Data ###
+vector_store.json
