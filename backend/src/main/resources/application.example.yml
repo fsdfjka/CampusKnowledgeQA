@@ -1,7 +1,36 @@
 server:
   port: 8081
 
+app:
+  rag:
+    # 文本切片大小（token），需小于 embedding 模型单条上限
+    chunk-size: 600
+  jwt:
+    # HS256 密钥，至少 32 字节；生产请用环境变量覆盖
+    secret: ${JWT_SECRET:your-very-long-jwt-secret-at-least-32-bytes}
+    expire-hours: 24
+
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.vectorstore.pgvector.autoconfigure.PgVectorStoreAutoConfiguration
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  datasource:
+    # 主数据源：MySQL（业务数据）
+    mysql:
+      url: jdbc:mysql://localhost:3306/campus_kb?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
+      username: ${MYSQL_USERNAME:root}
+      password: ${MYSQL_PASSWORD:your-mysql-password}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    # 向量数据源：PostgreSQL + pgvector（仅存文本向量）
+    pg:
+      url: jdbc:postgresql://localhost:5432/campus_kb
+      username: postgres
+      password: ${POSTGRES_PASSWORD:postgres}
+      driver-class-name: org.postgresql.Driver
   ai:
     dashscope:
       api-key: ${DASHSCOPE_API_KEY:your-dashscope-api-key}
@@ -10,5 +39,5 @@ spring:
           model: qwen-turbo
       embedding:
         options:
-          model: text-embedding-v3
+          model: qwen3.7-text-embedding
           dimensions: 1024
