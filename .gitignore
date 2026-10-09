@@ -36,6 +36,11 @@ build/
 *.yml
 *.yaml
 !application.example.yml
+!docker-compose.yml
 
 ### Data ###
 vector_store.json
+uploads/
+
+### Logs ###
+*.log
